@@ -1,14 +1,23 @@
+"use client";
+
 import { createTRPCReact } from "@trpc/react-query";
-import { httpBatchLink, loggerLink } from "@trpc/client";
-import type { AppRouter } from "trpc/router"; // from packages
+import {
+  httpBatchLink,
+  createWSClient,
+  wsLink,
+  createTRPCClient,
+} from "@trpc/client";
+import type { AppRouter } from "trpc/router";
 
 export const trpc = createTRPCReact<AppRouter>();
 
-export const trpcClient = trpc.createClient({
+const wsClient = createWSClient({
+  url: "ws://localhost:3002",
+});
+
+export const trpcClient = createTRPCClient<AppRouter>({
   links: [
-    loggerLink(),
-    httpBatchLink({
-      url: "http://localhost:3001/trpc",
-    }),
+    wsLink({ client: wsClient }),
+    httpBatchLink({ url: "http://localhost:3001/trpc" }),
   ],
 });

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec tsx src/index.ts",
+    "ws": "tsx src/ws-server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,7 +16,8 @@
     "@hono/node-server": "^1.14.2",
     "@hono/trpc-server": "^0.3.4",
     "@trpc/server": "11.1.2",
-    "hono": "^4.7.10"
+    "hono": "^4.7.10",
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@types/node": "^20.17.50",
