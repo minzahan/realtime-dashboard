@@ -1,4 +1,3 @@
-// packages/trpc/emitter.ts
 import { EventEmitter } from "events";
 
 export const txEmitter = new EventEmitter();
