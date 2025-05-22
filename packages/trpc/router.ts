@@ -1,6 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import { Context } from "./context";
 import z from "zod";
+import { saveTransaction, getAllTransactions } from "backend/src/db";
 
 const t = initTRPC.context<Context>().create();
 
@@ -18,13 +19,18 @@ type Transaction = z.infer<typeof transactionInput> & { date: string };
 export const appRouter = router({
   healthcheck: publicProcedure.query(() => "OK"),
 
+  getTransactions: publicProcedure.query(async () => {
+    return await getAllTransactions();
+  }),
+
   addTransaction: publicProcedure
     .input(transactionInput)
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const tx: Transaction = {
         ...input,
         date: new Date().toISOString(),
       };
+      await saveTransaction(tx);
       ctx.txEmitter.emit("newTx", tx);
       return tx;
     }),
@@ -52,4 +58,5 @@ export const appRouter = router({
     })();
   }),
 });
+
 export type AppRouter = typeof appRouter;

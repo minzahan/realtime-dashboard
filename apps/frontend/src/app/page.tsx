@@ -1,15 +1,23 @@
 "use client";
 
 import { trpc } from "@frontend/lib/trpc";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function HomePage() {
   const [transactions, setTransactions] = useState<any[]>([]);
 
-  // Subscribe to real-time transaction updates
+  // 1. Initial load from mock-db
+  const { data: initialTxs = [] } = trpc.getTransactions.useQuery();
+
+  useEffect(() => {
+    if (initialTxs) {
+      setTransactions(initialTxs);
+    }
+  }, [initialTxs]);
+
+  // 2. Live updates via subscription
   trpc.transactionUpdates.useSubscription(undefined, {
     onData(tx) {
-      console.log("📡 New transaction:", tx);
       setTransactions((prev) => [...prev, tx]);
     },
     onError(err) {
@@ -17,6 +25,7 @@ export default function HomePage() {
     },
   });
 
+  // 3. Mutation to add new transactions
   const addTx = trpc.addTransaction.useMutation();
 
   return (
@@ -37,7 +46,7 @@ export default function HomePage() {
       <ul className="space-y-2">
         {transactions.map((tx, i) => (
           <li key={i}>
-            💰 {tx.name} - {tx.amount} {tx.currency}
+            💰 {tx.name} — {tx.amount} {tx.currency}
           </li>
         ))}
       </ul>
