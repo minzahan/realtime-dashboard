@@ -21,11 +21,12 @@ export const appRouter = router({
 
   getTransactions: publicProcedure.query(async () => {
     return await getAllTransactions();
-  }),
+  }), // to load existing transactions
 
-  addTransaction: publicProcedure
-    .input(transactionInput)
+  addTransaction: publicProcedure // new public procedure
+    .input(transactionInput) // input validation
     .mutation(async ({ input, ctx }) => {
+      // mutation that receives input data and
       const tx: Transaction = {
         ...input,
         date: new Date().toISOString(),

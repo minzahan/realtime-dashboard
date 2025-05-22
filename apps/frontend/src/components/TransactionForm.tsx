@@ -16,6 +16,10 @@ export default function TransactionForm() {
       setCurrency("USD");
     },
   });
+  // useMutation is a React hook that provides:
+  // A mutate function to trigger the mutation
+  // Success/error callbacks
+  // type safe
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

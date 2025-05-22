@@ -6,7 +6,7 @@ import { appRouter, AppRouter } from "trpc/router";
 import { createContext } from "trpc/context";
 
 const wss = new WebSocketServer({
-  port: 3002, // 🚨 avoid 3001 since your HTTP server is likely on it
+  port: 3002, // avoid 3001 since  HTTP server is on it
 });
 
 const handler = applyWSSHandler<AppRouter>({
@@ -26,7 +26,8 @@ wss.on("connection", (ws) => {
 console.log("📡 tRPC WebSocket Server listening on ws://localhost:3002");
 
 process.on("SIGTERM", () => {
-  console.log("🛑 SIGTERM: shutting down WebSocket server...");
+  // Termination request - from tRPC docs
+  console.log("SIGTERM: shutting down WebSocket server...");
   handler.broadcastReconnectNotification();
   wss.close();
 });

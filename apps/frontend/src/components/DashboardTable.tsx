@@ -13,7 +13,7 @@ export default function DashboardTable() {
     if (tableRef.current) {
       tableRef.current.scrollTop = tableRef.current.scrollHeight;
     }
-  }, [transactions]);
+  }, [transactions]); // Automatically scroll to the bottom when transactions are updated
 
   const utils = trpc.useUtils();
 
@@ -27,19 +27,22 @@ export default function DashboardTable() {
       }, 100);
     },
     onError(err) {
-      console.error("❌ Subscription error:", err);
+      console.error("Subscription error:", err);
     },
   });
 
-  const filtered = useMemo(() => {
+  const filteredTransactions = useMemo(() => {
+    // only filter when search is changed
     return transactions.filter((tx) =>
       tx.name.toLowerCase().includes(search.toLowerCase())
     );
   }, [search, transactions]);
 
   const totalRevenue = useMemo(() => {
-    return filtered.reduce((sum, tx) => sum + tx.amount, 0);
-  }, [filtered]);
+    // Only recalculate when transactions change
+    // return filteredTransactions.reduce((sum, tx) => sum + tx.amount, 0);
+    return transactions.reduce((sum, tx) => sum + tx.amount, 0);
+  }, [transactions]); // Change to filteredTransactions if calculating on filtered data
 
   return (
     <div className="card h-full flex flex-col">
@@ -68,12 +71,12 @@ export default function DashboardTable() {
           <thead className="text-xs uppercase text-gray-500 sticky top-0 bg-white z-10">
             <tr>
               <th className="py-2 px-4">Date</th>
-              <th className="py-2 px-4">Customer</th>
+              <th className="py-2 px-4">Customer Name</th>
               <th className="py-2 px-4">Amount</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((tx, i) => (
+            {filteredTransactions.map((tx, i) => (
               <tr key={i} className="border-t">
                 <td className="py-2 px-4 text-gray-600">
                   {new Date(tx.date).toLocaleDateString()}

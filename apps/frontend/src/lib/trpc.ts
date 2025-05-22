@@ -9,7 +9,7 @@ import {
 } from "@trpc/client";
 import type { AppRouter } from "trpc/router";
 
-export const trpc = createTRPCReact<AppRouter>();
+export const trpc = createTRPCReact<AppRouter>(); // AppRouter type ensures all API calls match the backend
 
 const wsClient = createWSClient({
   url: "ws://localhost:3002",
