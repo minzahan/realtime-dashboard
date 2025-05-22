@@ -24,6 +24,7 @@ pnpm install
 ```bash
 pnpm dev:all
 ```
+Visit [http://localhost:3000](http://localhost:3000)
 
 ### This will launch:
 
