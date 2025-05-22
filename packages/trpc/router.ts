@@ -14,7 +14,7 @@ const transactionInput = z.object({
   currency: z.string(),
 });
 
-type Transaction = z.infer<typeof transactionInput> & { date: string };
+export type Transaction = z.infer<typeof transactionInput> & { date: string };
 
 export const appRouter = router({
   healthcheck: publicProcedure.query(() => "OK"),
