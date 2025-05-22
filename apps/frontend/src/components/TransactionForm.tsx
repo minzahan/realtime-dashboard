@@ -25,7 +25,7 @@ export default function TransactionForm() {
     e.preventDefault();
     if (!name || !amount || !currency) return;
     addTx.mutate({
-      name,
+      name: name.trim(),
       amount: parseFloat(amount),
       currency,
     });
@@ -44,10 +44,14 @@ export default function TransactionForm() {
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={
+              (e) => setName(e.target.value.replace(/[^a-zA-Z\s]/g, "")) // remove non-alphabetic characters
+            }
             className="form-input"
             placeholder="e.g. Jane Doe"
             required
+            pattern="[A-Za-z\s]+"
+            title="Please enter only letters and spaces"
           />
         </div>
         <div>
